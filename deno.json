@@ -1,0 +1,20 @@
+{
+    "name": "@kf/preact-icons",
+    "version": "1.1.239-beta.0",
+    "exports": "./mod.tsx",
+    "publish": {
+        "include": [
+            "./mod.tsx",
+            "./README.md",
+            "./LICENSE"
+        ]
+    },
+    "lock": false,
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "npm:preact"
+    },
+    "imports": {
+        "preact": "npm:preact"
+    }
+}

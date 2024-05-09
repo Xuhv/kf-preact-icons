@@ -6,7 +6,8 @@
         "include": [
             "./mod.tsx",
             "./README.md",
-            "./LICENSE"
+            "./LICENSE",
+            "./deno.json"
         ]
     },
     "lock": false,

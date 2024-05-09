@@ -25,4 +25,4 @@ jobs:
         run: deno run -A ./build.tsx
 
       - name: Publish package
-        run: npx jsr publish
+        run: deno publish

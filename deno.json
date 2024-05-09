@@ -16,6 +16,6 @@
         "jsxImportSource": "npm:preact"
     },
     "imports": {
-        "preact": "npm:preact"
+        "preact": "npm:preact@^10.21.0"
     }
 }

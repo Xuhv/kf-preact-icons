@@ -1,6 +1,6 @@
 {
     "name": "@kf/preact-icons",
-    "version": "1.1.239-beta.0",
+    "version": "1.1.239-beta.1",
     "exports": "./mod.tsx",
     "publish": {
         "include": [

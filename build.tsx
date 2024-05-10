@@ -60,6 +60,7 @@ for (const [iconName, file] of files) {
   )!.body.firstElementChild!;
 
   const d = svg.querySelector("path")?.getAttribute("d");
+  const viewBox = svg.getAttribute("viewBox")!;
 
   const iconContent = `
 export function ${iconName}({ width, height, ...props }: JSX.HTMLAttributes<SVGSVGElement>): JSX.Element {
@@ -68,7 +69,7 @@ export function ${iconName}({ width, height, ...props }: JSX.HTMLAttributes<SVGS
       {...props}
       width={width}
       height={height}
-      viewBox={\`0 0 \${width} \${height}\`}
+      viewBox="${viewBox}"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

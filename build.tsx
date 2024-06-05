@@ -51,37 +51,18 @@ const files = unique(
   ([name]) => name.toLowerCase(),
 );
 
-const variables: string[] = ['import type { JSX } from "preact";'];
+const variables: string[] = ['import { createIcon, type FluentIcon } from "./core.tsx";'];
 
 for (const [iconName, file] of files) {
-  const svg = parser.parseFromString(
-    await Deno.readTextFile(file),
-    "text/html",
-  )!.body.firstElementChild!;
+  const svg = parser.parseFromString(await Deno.readTextFile(file), "text/html")!.body.firstElementChild!;
 
   const d = svg.querySelector("path")?.getAttribute("d");
   const viewBox = svg.getAttribute("viewBox")!;
 
   const iconContent = `
-export function ${iconName}({ width, height, ...props }: JSX.HTMLAttributes<SVGSVGElement>): JSX.Element {
-  return (
-    <svg
-      {...props}
-      width={width}
-      height={height}
-      viewBox="${viewBox}"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="${d}" fill="currentColor" />
-    </svg>
-  );
-}`;
+export const ${iconName}: FluentIcon = createIcon("${d}", "${viewBox}");`;
 
   variables.push(iconContent);
 }
 
-await Deno.writeTextFile(
-  "mod.tsx",
-  variables.join("\n"),
-);
+await Deno.writeTextFile("mod.tsx", variables.join("\n"));

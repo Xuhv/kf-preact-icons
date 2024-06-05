@@ -1,9 +1,10 @@
 {
     "name": "@kf/preact-icons",
-    "version": "1.1.239-beta.1",
+    "version": "1.1.239-beta.2",
     "exports": "./mod.tsx",
     "publish": {
         "include": [
+            "./core.tsx",
             "./mod.tsx",
             "./README.md",
             "./LICENSE",
@@ -13,9 +14,13 @@
     "lock": false,
     "compilerOptions": {
         "jsx": "react-jsx",
-        "jsxImportSource": "npm:preact"
+        "jsxImportSource": "preact"
     },
     "imports": {
-        "preact": "npm:preact@^10.21.0"
+        "preact": "npm:preact@^10.21.0",
+        "preact/": "npm:/preact@^10.21.0/"
+    },
+    "fmt": {
+        "lineWidth": 120
     }
 }

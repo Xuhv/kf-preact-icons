@@ -1,6 +1,7 @@
 import { DOMParser } from "jsr:@b-fuze/deno-dom";
 import { unique } from "npm:radash";
 import { resolve } from "jsr:@std/path";
+import denoJson from "./deno.json" with { type: "json" };
 
 const removeSuffixAndPrefix = (str: string, suffix: string, prefix: string) => {
   let res = str.endsWith(suffix) ? str.slice(0, -suffix.length) : str;
@@ -56,6 +57,7 @@ try {
 } catch {}
 
 const buffer: Record<string, string[]> = {};
+const iconsExports: string[] = [];
 
 for (const [iconName, file] of files) {
   const svg = parser.parseFromString(await Deno.readTextFile(file), "text/html")!.body.firstElementChild!;
@@ -63,17 +65,27 @@ for (const [iconName, file] of files) {
   const d = svg.querySelector("path")?.getAttribute("d");
   const viewBox = svg.getAttribute("viewBox")!;
 
-  const _iconName = iconName.replace(/(Filled|Regular)$/, "")
+  const _iconName = iconName.replace(/(Filled|Regular)$/, "");
 
   const iconContent = `export const ${iconName}: FluentIcon = createIcon("${d}", "${viewBox}");`;
 
   if (!buffer[_iconName]?.length) {
     buffer[_iconName] = ['import { createIcon, bundleIcon, type FluentIcon } from "../core.tsx";', iconContent];
-  }
-  else {
+  } else {
     buffer[_iconName].push(iconContent);
-    buffer[_iconName].push(`export const ${_iconName}: FluentIcon = bundleIcon(${_iconName}Filled, ${_iconName}Regular);`);
+    buffer[_iconName].push(
+      `export const ${_iconName}: FluentIcon = bundleIcon(${_iconName}Filled, ${_iconName}Regular);`,
+    );
     await Deno.writeTextFile(`./icons/${_iconName}.ts`, buffer[_iconName].join("\n"));
     delete buffer[_iconName];
+
+    iconsExports.push(`./icons/${_iconName}.ts`);
   }
 }
+
+for (const ic of iconsExports) {
+  // @ts-expect-error:
+  denoJson.exports[ic] = ic;
+}
+
+Deno.writeTextFileSync("deno.json", JSON.stringify(denoJson, null, 4) );

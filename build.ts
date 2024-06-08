@@ -51,7 +51,11 @@ const files = unique(
   ([name]) => name.toLowerCase(),
 );
 
-const variables: string[] = ['import { createIcon, type FluentIcon } from "./core.tsx";'];
+try {
+  Deno.mkdirSync("./icons");
+} catch {}
+
+const buffer: Record<string, string[]> = {};
 
 for (const [iconName, file] of files) {
   const svg = parser.parseFromString(await Deno.readTextFile(file), "text/html")!.body.firstElementChild!;
@@ -59,10 +63,17 @@ for (const [iconName, file] of files) {
   const d = svg.querySelector("path")?.getAttribute("d");
   const viewBox = svg.getAttribute("viewBox")!;
 
-  const iconContent = `
-export const ${iconName}: FluentIcon = createIcon("${d}", "${viewBox}");`;
+  const _iconName = iconName.replace(/(Filled|Regular)$/, "")
 
-  variables.push(iconContent);
+  const iconContent = `export const ${iconName}: FluentIcon = createIcon("${d}", "${viewBox}");`;
+
+  if (!buffer[_iconName]?.length) {
+    buffer[_iconName] = ['import { createIcon, bundleIcon, type FluentIcon } from "../core.tsx";', iconContent];
+  }
+  else {
+    buffer[_iconName].push(iconContent);
+    buffer[_iconName].push(`export const ${_iconName}: FluentIcon = bundleIcon(${_iconName}Filled, ${_iconName}Regular);`);
+    await Deno.writeTextFile(`./icons/${_iconName}.ts`, buffer[_iconName].join("\n"));
+    delete buffer[_iconName];
+  }
 }
-
-await Deno.writeTextFile("mod.tsx", variables.join("\n"));

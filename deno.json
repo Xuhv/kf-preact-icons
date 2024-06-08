@@ -1,14 +1,15 @@
 {
     "name": "@kf/preact-icons",
-    "version": "1.1.239-beta.2",
-    "exports": "./mod.tsx",
+    "version": "1.1.239-beta.3",
+    "exports": "./core.tsx",
+    "tasks": {
+        "build": "deno run -A build.ts"
+    },
     "publish": {
-        "include": [
-            "./core.tsx",
-            "./mod.tsx",
-            "./README.md",
-            "./LICENSE",
-            "./deno.json"
+        "exclude": [
+            "fluentui-system-icons",
+            "build.ts",
+            ".*"
         ]
     },
     "lock": false,

@@ -22,7 +22,7 @@ jobs:
           deno-version: v1.x
 
       - name: Build package
-        run: deno run -A ./build.tsx
+        run: deno task build
 
       - name: Publish package
         run: deno publish

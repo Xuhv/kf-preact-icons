@@ -83,9 +83,12 @@ for (const [iconName, file] of files) {
   }
 }
 
+const exports = { ".": "./core.tsx" }
 for (const ic of iconsExports) {
   // @ts-expect-error:
-  denoJson.exports[ic] = ic;
+  exports[ic] = ic;
+  // @ts-expect-error:
+  denoJson.exports = exports
 }
 
 Deno.writeTextFileSync("deno.json", JSON.stringify(denoJson, null, 4) );

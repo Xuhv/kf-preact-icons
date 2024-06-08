@@ -13,29 +13,35 @@ export type FluentIconProps =
 
 export type FluentIcon = (pops: FluentIconProps) => JSX.Element;
 
-export const createIcon = (d: string, viewBox: string): FluentIcon => ({ size, ...props }: FluentIconProps) => (
-  <svg
-    {...props}
-    width={size}
-    height={size}
-    viewBox={viewBox}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d={d} fill="currentColor" />
-  </svg>
-);
+function mergeClasses(...classes: unknown[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
-const mergeClasses = (...classes: unknown[]) => classes.filter(Boolean).join(" ");
+export const createIcon =
+  (d: string, viewBox: string): FluentIcon => ({ size, className, ...props }: FluentIconProps) => (
+    <svg
+      {...props}
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={mergeClasses(bundleIconConfiguration.base, className)}
+    >
+      <path d={d} fill="currentColor" />
+    </svg>
+  );
 
 const bundleIconConfiguration = {
-  filled: "default",
-  regular: "hover",
+  filled: "filled",
+  regular: "regular",
+  base: "icon",
 };
 
-export function initIconConfiguration(filledClassName: string, regularClassName: string): void {
+export function initIconConfiguration(baseClassName: string, filledClassName: string, regularClassName: string): void {
   bundleIconConfiguration.filled = filledClassName;
   bundleIconConfiguration.regular = regularClassName;
+  bundleIconConfiguration.base = baseClassName;
 }
 
 export function bundleIcon(FilledIcon: FluentIcon, RegularIcon: FluentIcon): FluentIcon {
